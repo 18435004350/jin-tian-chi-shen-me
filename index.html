@@ -16,40 +16,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .header h1{font-size:26px;font-weight:700;color:#d35400}
 .header p{font-size:14px;color:#999;margin-top:4px}
 
-/* today's choice bar */
-.today-bar{background:linear-gradient(135deg,#fff3e6,#fff8f0);border:2px solid #f0d5b0;border-radius:14px;padding:16px;margin:4px 0 14px;text-align:center}
-.today-bar .tb-label{font-size:13px;color:#b87a40;font-weight:600}
-.today-bar .tb-choice{font-size:20px;font-weight:700;color:#d35400;margin:6px 0}
-.today-bar .tb-source{font-size:12px;color:#b87a40;background:#f0d5b0;display:inline-block;padding:2px 10px;border-radius:10px;margin-top:4px}
-.today-bar .tb-note{font-size:13px;color:#888;margin-top:8px;font-style:italic;padding:4px 10px;background:rgba(255,255,255,.5);border-radius:8px}
-.today-bar .tb-empty{font-size:14px;color:#999;padding:10px 0}
-.today-bar .tb-clear{display:inline-block;margin-top:8px;padding:4px 14px;border:1px solid #ddd;border-radius:14px;background:#fff;font-size:12px;color:#999;cursor:pointer;transition:.2s}
-.today-bar .tb-clear:active{background:#fee;color:#e74c3c;border-color:#e74c3c}
+/* selections section */
+.selections-section{flex:1;display:flex;flex-direction:column;min-height:0}
+.selections-header{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px}
+.selections-header .sh-title{font-size:14px;font-weight:600;color:#888}
+.selections-header .sh-count{font-size:13px;color:#bbb}
+.selections-list{display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex:1;padding-bottom:10px}
+.selections-list:empty::after{content:'还没人选，快去选一个吧 🎯';display:block;text-align:center;color:#bbb;font-size:14px;padding:40px 0}
 
-/* note editor (inline on home page) */
-.note-editor{display:none;margin:0 0 10px;padding:12px 14px;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-.note-editor.show{display:block}
-.note-editor label{font-size:13px;color:#888;font-weight:600;display:block;margin-bottom:6px}
-.note-editor textarea{width:100%;padding:10px 12px;border:2px solid #e8e0d8;border-radius:10px;font-size:14px;outline:none;resize:vertical;min-height:56px;font-family:inherit;transition:.2s}
-.note-editor textarea:focus{border-color:#d35400}
-.note-editor .note-save{display:block;width:100%;margin-top:8px;padding:8px;border:none;border-radius:8px;background:#d35400;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
-.note-editor .note-save:active{transform:scale(.97)}
+/* selection card */
+.sel-card{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative}
+.sel-card .sel-top{display:flex;align-items:center;gap:10px}
+.sel-card .sel-img{width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;cursor:pointer;background:#f5f0eb}
+.sel-card .sel-info{flex:1;min-width:0}
+.sel-card .sel-name{font-size:15px;font-weight:600;color:#444}
+.sel-card .sel-meta{font-size:11px;color:#aaa;margin-top:1px;display:flex;gap:8px;align-items:center}
+.sel-card .sel-store{background:#f5f0eb;padding:1px 8px;border-radius:8px}
+.sel-card .sel-time{color:#bbb}
+.sel-card .sel-note{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #f0ebe5}
+.sel-card .sel-note.show{display:block}
+.sel-card .sel-note textarea{width:100%;padding:8px 10px;border:1.5px solid #e8e0d8;border-radius:8px;font-size:13px;outline:none;resize:vertical;min-height:36px;font-family:inherit;transition:.2s}
+.sel-card .sel-note textarea:focus{border-color:#d35400}
+.sel-card .sel-note .note-actions{display:flex;gap:6px;margin-top:4px;justify-content:flex-end}
+.sel-card .sel-note .note-actions button{padding:4px 12px;border:none;border-radius:6px;font-size:12px;cursor:pointer;transition:.2s}
+.sel-card .sel-note .note-save-btn{background:#d35400;color:#fff}
+.sel-card .sel-note .note-save-btn:active{transform:scale(.95)}
+.sel-card .sel-note .note-cancel-btn{background:#eee;color:#888}
+.sel-card .sel-note .note-cancel-btn:active{transform:scale(.95)}
+.sel-card .sel-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.sel-card .sel-note-btn{padding:4px 10px;border:1.5px solid #ddd;border-radius:6px;background:#fff;font-size:11px;color:#888;cursor:pointer;transition:.2s}
+.sel-card .sel-note-btn:active{background:#f5f0eb}
+.sel-card .sel-note-btn.has-note{background:#fff8f0;border-color:#d35400;color:#d35400}
+.sel-card .sel-del-btn{width:24px;height:24px;border:none;border-radius:50%;background:#fce4e4;color:#e74c3c;font-size:12px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sel-card .sel-del-btn:active{transform:scale(.85);background:#e74c3c;color:#fff}
+
+/* home bottom bar */
+.home-bottom{display:flex;gap:10px;padding:12px 0 4px}
+.home-bottom .hb-btn{flex:1;padding:12px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;text-align:center}
+.home-bottom .hb-btn:active{transform:scale(.96)}
+.hb-delivery{background:linear-gradient(135deg,#ff6b35,#f7931e);color:#fff}
+.hb-canteen{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff}
 
 /* back btn */
 .back-bar{display:flex;align-items:center;padding:8px 0 12px;gap:12px}
 .back-btn{width:36px;height:36px;border-radius:50%;border:none;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);font-size:20px;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .back-btn:active{transform:scale(.92)}
 .back-bar h2{font-size:18px;font-weight:600;color:#444}
-
-/* home menu */
-.home-grid{display:flex;flex-direction:column;gap:16px;padding:0;flex:1;justify-content:center}
-.home-card{border-radius:16px;padding:30px 20px;text-align:center;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(0,0,0,.06);position:relative;overflow:hidden}
-.home-card:active{transform:scale(.97)}
-.home-card-delivery{background:linear-gradient(135deg,#ff6b35,#f7931e)}
-.home-card-canteen{background:linear-gradient(135deg,#2ecc71,#27ae60)}
-.home-card .icon{font-size:48px;display:block;margin-bottom:10px}
-.home-card .label{font-size:22px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.15)}
-.home-card .sub{font-size:13px;color:rgba(255,255,255,.85);margin-top:4px}
 
 /* floor grid */
 .floor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:10px 0}
@@ -79,15 +91,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .options-toolbar .add-btn{width:44px;height:44px;border:none;border-radius:10px;background:#d35400;color:#fff;font-size:22px;cursor:pointer;flex-shrink:0;transition:.2s}
 .options-toolbar .add-btn:active{transform:scale(.92)}
 
-/* image upload area (for 3F & 东教) */
-.img-upload-area{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}
-.img-upload-area input[type=file]{display:none}
-.img-upload-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border:2px dashed #ccc;border-radius:10px;background:#fff;font-size:14px;color:#888;cursor:pointer;transition:.2s}
-.img-upload-btn:active{background:#f5f0eb}
-.img-upload-btn .cam-icon{font-size:18px}
+/* image upload area */
 .add-with-img-area{display:flex;gap:8px;flex:1;min-width:0}
 .add-with-img-area input{flex:1;padding:10px 14px;border:2px solid #e8e0d8;border-radius:10px;font-size:15px;outline:none;background:#fff;transition:.2s;min-width:0}
 .add-with-img-area input:focus{border-color:#d35400}
+.img-upload-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border:2px dashed #ccc;border-radius:10px;background:#fff;font-size:14px;color:#888;cursor:pointer;transition:.2s}
+.img-upload-btn:active{background:#f5f0eb}
+.img-upload-btn .cam-icon{font-size:18px}
+.add-with-img-area input[type=file]{display:none}
 
 /* options list */
 .options-list{display:flex;flex-direction:column;gap:10px;flex:1;padding-bottom:20px}
@@ -98,7 +109,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .option-item .o-sub{font-size:11px;color:#aaa;margin-top:1px}
 .option-item .o-pick{padding:6px 12px;border:none;border-radius:8px;background:#d35400;color:#fff;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;transition:.2s}
 .option-item .o-pick:active{transform:scale(.9);background:#e67e22}
-.option-item .o-pick.is-today{background:#27ae60}
 .option-item .o-del{width:28px;height:28px;border:none;border-radius:50%;background:#fce4e4;color:#e74c3c;font-size:14px;cursor:pointer;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
 .option-item .o-del:active{transform:scale(.85);background:#e74c3c;color:#fff}
 .option-empty{text-align:center;color:#bbb;font-size:14px;padding:40px 0}
@@ -109,52 +119,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .modal-img{max-width:90vw;max-height:80vh;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
 .modal-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-/* preset toggle */
-.preset-toggle{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.preset-toggle button{padding:6px 14px;border:1.5px solid #ddd;border-radius:20px;background:#fff;font-size:13px;color:#666;cursor:pointer;transition:.2s}
-.preset-toggle button:active,.preset-toggle button.on{background:#d35400;color:#fff;border-color:#d35400}
+/* refresh indicator */
+.refresh-bar{display:flex;justify-content:center;align-items:center;gap:6px;margin:0 0 8px}
+.refresh-bar .rb-btn{padding:3px 14px;border:1.5px solid #ddd;border-radius:14px;background:#fff;font-size:12px;color:#888;cursor:pointer;transition:.2s}
+.refresh-bar .rb-btn:active{background:#f5f0eb}
+.refresh-bar .rb-status{font-size:11px;color:#bbb}
 
-/* empty state */
-.empty-state{padding:40px 0;text-align:center;color:#bbb;font-size:14px;line-height:1.8}
-
-/* notifications */
+/* toast */
 .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:2000;pointer-events:none;opacity:0;transition:opacity .3s}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- ========== MAIN MENU ========== -->
+<!-- ========== HOME ========== -->
 <div id="page-home" class="page active">
   <div class="header">
     <h1>🍽️ 今天吃什么</h1>
-    <p>选择困难症的终结者</p>
+    <p>共享选择，大家一起定 🎉</p>
   </div>
 
-  <!-- Today's Choice Bar -->
-  <div class="today-bar" id="today-bar">
-    <div class="tb-label">📋 今天的决定</div>
-    <div id="today-content"></div>
-  </div>
-
-  <!-- Note Editor (inline on home) -->
-  <div class="note-editor" id="note-editor">
-    <label for="note-text">📝 备注</label>
-    <textarea id="note-text" placeholder="自由填写备注信息…今天为什么选这个？"></textarea>
-    <button class="note-save" onclick="saveNote()">保存备注</button>
-  </div>
-
-  <div class="home-grid">
-    <div class="home-card home-card-delivery" onclick="navigate('delivery')">
-      <span class="icon">🛵</span>
-      <div class="label">点外卖</div>
-      <div class="sub">美团 · 淘宝 · 饿了么</div>
+  <div class="selections-section">
+    <div class="selections-header">
+      <span class="sh-title">📋 大家的决定</span>
+      <span class="sh-count" id="sel-count"></span>
     </div>
-    <div class="home-card home-card-canteen" onclick="navigate('canteen')">
-      <span class="icon">🏫</span>
-      <div class="label">吃食堂</div>
-      <div class="sub">二楼 · 三楼 · 东教</div>
+    <div class="refresh-bar">
+      <button class="rb-btn" onclick="refreshSelections()">🔄 刷新</button>
+      <span class="rb-status" id="rb-status"></span>
     </div>
+    <div class="selections-list" id="sel-list"></div>
+  </div>
+
+  <div class="home-bottom">
+    <button class="hb-btn hb-delivery" onclick="navigate('delivery')">🛵 点外卖</button>
+    <button class="hb-btn hb-canteen" onclick="navigate('canteen')">🏫 吃食堂</button>
   </div>
 </div>
 
@@ -236,7 +235,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     <button class="back-btn" onclick="navigate('canteen')">‹</button>
     <h2>🍜 三楼食堂</h2>
   </div>
-  <!-- upload + add -->
   <div class="add-with-img-area">
     <input id="f3-input" type="text" placeholder="菜品名称..." maxlength="30">
     <label class="img-upload-btn" id="f3-upload-label">
@@ -255,7 +253,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     <button class="back-btn" onclick="navigate('canteen')">‹</button>
     <h2>📚 东教食堂</h2>
   </div>
-  <!-- upload + add -->
   <div class="add-with-img-area">
     <input id="dj-input" type="text" placeholder="菜品名称..." maxlength="30">
     <label class="img-upload-btn" id="dj-upload-label">
@@ -278,15 +275,188 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== CONFIG =====
+const API_BASE = 'https://jsonblob.com/api/jsonBlob';
+// Shared blob ID — all users read/write to this
+const BLOB_ID = '019e5fc0-9368-7e68-a0f3-1623cac9800d';
+
 // ===== STATE =====
-const STORAGE_KEY = 'canteen_options_v3';
-const CHOICE_KEY = 'today_choice_v1';
+const STORAGE_KEY = 'canteen_options_v4';
 const STORES = ['floor2','floor3','dongjiao'];
 const STORE_NAMES = {floor2:'二楼食堂', floor3:'三楼食堂', dongjiao:'东教食堂'};
 const STORE_ICONS = {floor2:'🥟', floor3:'🍜', dongjiao:'📚'};
 let data = loadData();
 let pendingImage = null;
+let selections = [];
+let syncTimer = null;
 
+// ===== SHARED DATA (jsonblob.com) =====
+async function fetchSelections() {
+  try {
+    const res = await fetch(API_BASE + '/' + BLOB_ID);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+    if (d && Array.isArray(d.selections)) {
+      selections = d.selections;
+    } else {
+      selections = [];
+    }
+  } catch(e) {
+    console.warn('共享加载失败，使用本地数据:', e);
+    // use local cache
+    try {
+      const cached = localStorage.getItem('shared_sel_cache');
+      if (cached) selections = JSON.parse(cached);
+    } catch(e2) {}
+  }
+  renderSelections();
+}
+
+async function syncSelections() {
+  try {
+    const payload = {selections: selections, updated: new Date().toISOString()};
+    const res = await fetch(API_BASE + '/' + BLOB_ID, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    // cache locally
+    localStorage.setItem('shared_sel_cache', JSON.stringify(selections));
+    showStatus('✅ 已同步');
+  } catch(e) {
+    console.warn('同步失败:', e);
+    showStatus('⚠️ 同步失败，重试中…');
+    setTimeout(() => syncSelections(), 3000);
+  }
+}
+
+function scheduleSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => syncSelections(), 500);
+}
+
+function showStatus(msg) {
+  const el = document.getElementById('rb-status');
+  el.textContent = msg;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.textContent = ''; }, 3000);
+}
+
+// ===== SELECTION OPERATIONS =====
+async function addSelection(item, store) {
+  const sel = {
+    id: genId(),
+    name: item.name,
+    image: item.image || '',
+    store: store,
+    storeName: STORE_NAMES[store],
+    icon: STORE_ICONS[store],
+    note: '',
+    timestamp: Date.now(),
+    timeStr: new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'})
+  };
+  selections.unshift(sel); // newest first
+  await syncSelections();
+  renderSelections();
+  showToast('✅ 已选：' + item.name);
+  navigate('home');
+}
+
+function removeSelection(id) {
+  selections = selections.filter(s => s.id !== id);
+  syncSelections();
+  renderSelections();
+}
+
+function toggleNoteEditor(id) {
+  const card = document.querySelector(`.sel-card[data-id="${id}"]`);
+  if (!card) return;
+  const editor = card.querySelector('.sel-note');
+  editor.classList.toggle('show');
+  if (editor.classList.contains('show')) {
+    editor.querySelector('textarea').focus();
+  }
+}
+
+function saveSelNote(id) {
+  const card = document.querySelector(`.sel-card[data-id="${id}"]`);
+  if (!card) return;
+  const textarea = card.querySelector('textarea');
+  const note = textarea.value.trim();
+  const sel = selections.find(s => s.id === id);
+  if (sel) {
+    sel.note = note;
+    syncSelections();
+    renderSelections();
+    showToast('✅ 备注已保存');
+  }
+}
+
+function cancelSelNote(id) {
+  const sel = selections.find(s => s.id === id);
+  const card = document.querySelector(`.sel-card[data-id="${id}"]`);
+  if (card) {
+    const editor = card.querySelector('.sel-note');
+    editor.classList.remove('show');
+    if (sel) card.querySelector('textarea').value = sel.note || '';
+  }
+}
+
+function renderSelections() {
+  const container = document.getElementById('sel-list');
+  const countEl = document.getElementById('sel-count');
+
+  if (!selections || selections.length === 0) {
+    container.innerHTML = '';
+    countEl.textContent = '0 个选择';
+    return;
+  }
+
+  countEl.textContent = selections.length + ' 个选择';
+
+  container.innerHTML = selections.map(s => {
+    const hasImg = s.image && s.image.startsWith('data:');
+    const imgHtml = hasImg
+      ? `<img class="sel-img" src="${s.image}" alt="${s.name}" onclick="openImage('${s.image}')">`
+      : s.store !== 'floor2'
+        ? `<div class="sel-img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc;background:#f5f0eb">📋</div>`
+        : '';
+
+    return `
+      <div class="sel-card" data-id="${s.id}">
+        <div class="sel-top">
+          ${imgHtml}
+          <div class="sel-info">
+            <div class="sel-name">${s.icon} ${s.name}</div>
+            <div class="sel-meta">
+              <span class="sel-store">${s.storeName}</span>
+              <span class="sel-time">${s.timeStr || ''}</span>
+            </div>
+          </div>
+          <div class="sel-actions">
+            <button class="sel-note-btn ${s.note ? 'has-note' : ''}" onclick="toggleNoteEditor('${s.id}')">${s.note ? '📝' : '💬'} 备注</button>
+            <button class="sel-del-btn" onclick="removeSelection('${s.id}')">✕</button>
+          </div>
+        </div>
+        <div class="sel-note ${s.note ? 'show' : ''}">
+          <textarea placeholder="写备注…例如：加辣、不要葱、帮我带一份">${s.note || ''}</textarea>
+          <div class="note-actions">
+            <button class="note-cancel-btn" onclick="cancelSelNote('${s.id}')">取消</button>
+            <button class="note-save-btn" onclick="saveSelNote('${s.id}')">保存</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function refreshSelections() {
+  showStatus('🔄 刷新中…');
+  await fetchSelections();
+}
+
+// ===== LOCAL DATA (canteen options) =====
 function defaultData() {
   return {
     floor2: [
@@ -324,88 +494,14 @@ function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function genId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-
-// ===== TODAY'S CHOICE =====
-function getTodayChoice() {
-  try {
-    const raw = localStorage.getItem(CHOICE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return null;
-}
-
-function setTodayChoice(item, store) {
-  const choice = {
-    item: item,
-    store: store,
-    storeName: STORE_NAMES[store],
-    icon: STORE_ICONS[store],
-    note: '',
-    date: new Date().toLocaleDateString('zh-CN'),
-    timestamp: Date.now()
-  };
-  // preserve existing note if there was one
-  const old = getTodayChoice();
-  if (old && old.note) choice.note = old.note;
-  localStorage.setItem(CHOICE_KEY, JSON.stringify(choice));
-  updateTodayBar();
-}
-
-function clearTodayChoice() {
-  localStorage.removeItem(CHOICE_KEY);
-  document.getElementById('note-editor').classList.remove('show');
-  updateTodayBar();
-}
-
-function saveNote() {
-  const choice = getTodayChoice();
-  if (!choice) { showToast('请先选择吃什么'); return; }
-  const note = document.getElementById('note-text').value.trim();
-  choice.note = note;
-  localStorage.setItem(CHOICE_KEY, JSON.stringify(choice));
-  updateTodayBar();
-  showToast('✅ 备注已保存');
-}
-
-function updateTodayBar() {
-  const choice = getTodayChoice();
-  const container = document.getElementById('today-content');
-  const noteEditor = document.getElementById('note-editor');
-
-  if (!choice || !choice.item) {
-    container.innerHTML = '<div class="tb-empty">今天还没选，去看看吧 👇</div>';
-    noteEditor.classList.remove('show');
-    return;
-  }
-
-  const hasImg = choice.item.image && choice.item.image.startsWith('data:');
-  const imgHtml = hasImg
-    ? `<img src="${choice.item.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;vertical-align:middle;margin-right:6px;cursor:pointer" onclick="openImage('${choice.item.image}')">`
-    : '';
-
-  const noteHtml = choice.note
-    ? `<div class="tb-note">💬 ${choice.note}</div>`
-    : '';
-
-  container.innerHTML = `
-    <div class="tb-choice">${imgHtml}${choice.item.name}</div>
-    <div class="tb-source">${choice.icon} ${choice.storeName}</div>
-    ${noteHtml}
-    <button class="tb-clear" onclick="clearTodayChoice()">换一个</button>
-  `;
-
-  // show note editor
-  noteEditor.classList.add('show');
-  document.getElementById('note-text').value = choice.note || '';
-}
+function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
 // ===== NAVIGATION =====
 function navigate(page) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
-  if(['floor2','floor3','dongjiao'].includes(page)) renderList(page);
-  if(page === 'home') updateTodayBar();
+  if (['floor2','floor3','dongjiao'].includes(page)) renderList(page);
+  if (page === 'home') fetchSelections();
   window.scrollTo(0,0);
 }
 
@@ -418,9 +514,7 @@ function addOption(store) {
   if (data[store].some(o => o.name === name)) { showToast('该菜品已存在'); return; }
 
   const item = {id: genId(), name};
-  if (store !== 'floor2') {
-    item.image = pendingImage || '';
-  }
+  if (store !== 'floor2') item.image = pendingImage || '';
   data[store].push(item);
   saveData();
   renderList(store);
@@ -434,30 +528,21 @@ function addOption(store) {
 }
 
 function deleteOption(store, id) {
-  // if deleting today's choice, clear it
-  const choice = getTodayChoice();
-  if (choice && choice.item && choice.item.id === id) {
-    clearTodayChoice();
-  }
   data[store] = data[store].filter(o => o.id !== id);
   saveData();
   renderList(store);
 }
 
-function selectOption(store, id) {
+function pickOption(store, id) {
   const item = data[store].find(o => o.id === id);
   if (!item) { showToast('选项不存在'); return; }
-  setTodayChoice(item, store);
-  showToast(`✅ 今天吃 ${item.name}`);
-  navigate('home');
+  addSelection(item, store);
 }
 
 function renderList(store) {
   const key = store === 'floor2' ? 'f2' : store === 'floor3' ? 'f3' : 'dj';
   const container = document.getElementById(key+'-list');
   const items = data[store];
-  const today = getTodayChoice();
-  const todayId = today && today.item ? today.item.id : null;
 
   if (items.length === 0) {
     container.innerHTML = '<div class="option-empty">还没有选项，在上面添加吧 📝</div>';
@@ -465,7 +550,6 @@ function renderList(store) {
   }
   container.innerHTML = items.map(item => {
     const hasImg = item.image && item.image.startsWith('data:');
-    const isToday = item.id === todayId;
     return `
       <div class="option-item">
         ${store !== 'floor2' && hasImg
@@ -476,16 +560,16 @@ function renderList(store) {
         }
         <div class="o-info">
           <div class="o-name">${item.name}</div>
-          <div class="o-sub">点击「选这个」决定今天吃它</div>
+          <div class="o-sub">点击「选它」添加到今日决定</div>
         </div>
-        <button class="o-pick ${isToday?'is-today':''}" onclick="selectOption('${store}','${item.id}')">${isToday?'✓ 已选':'选这个'}</button>
+        <button class="o-pick" onclick="pickOption('${store}','${item.id}')">选它</button>
         <button class="o-del" onclick="deleteOption('${store}','${item.id}')">✕</button>
       </div>
     `;
   }).join('');
 }
 
-// ===== IMAGE HANDLING =====
+// ===== IMAGE =====
 function handleImageUpload(event, store) {
   const file = event.target.files[0];
   if (!file) return;
@@ -534,7 +618,7 @@ function showToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 1500);
 }
 
-// ===== KEYBOARD SUPPORT =====
+// ===== KEYBOARD =====
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') {
     const activePage = document.querySelector('.page.active');
@@ -548,8 +632,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ===== INIT =====
-updateTodayBar();
-console.log('🍽️ 今天吃什么 已加载');
+fetchSelections();
 </script>
 </body>
 </html>
