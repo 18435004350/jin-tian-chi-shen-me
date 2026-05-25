@@ -16,6 +16,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .header h1{font-size:26px;font-weight:700;color:#d35400}
 .header p{font-size:14px;color:#999;margin-top:4px}
 
+/* today's choice bar */
+.today-bar{background:linear-gradient(135deg,#fff3e6,#fff8f0);border:2px solid #f0d5b0;border-radius:14px;padding:16px;margin:4px 0 14px;text-align:center}
+.today-bar .tb-label{font-size:13px;color:#b87a40;font-weight:600}
+.today-bar .tb-choice{font-size:20px;font-weight:700;color:#d35400;margin:6px 0}
+.today-bar .tb-source{font-size:12px;color:#b87a40;background:#f0d5b0;display:inline-block;padding:2px 10px;border-radius:10px;margin-top:4px}
+.today-bar .tb-note{font-size:13px;color:#888;margin-top:8px;font-style:italic;padding:4px 10px;background:rgba(255,255,255,.5);border-radius:8px}
+.today-bar .tb-empty{font-size:14px;color:#999;padding:10px 0}
+.today-bar .tb-clear{display:inline-block;margin-top:8px;padding:4px 14px;border:1px solid #ddd;border-radius:14px;background:#fff;font-size:12px;color:#999;cursor:pointer;transition:.2s}
+.today-bar .tb-clear:active{background:#fee;color:#e74c3c;border-color:#e74c3c}
+
+/* note editor (inline on home page) */
+.note-editor{display:none;margin:0 0 10px;padding:12px 14px;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.note-editor.show{display:block}
+.note-editor label{font-size:13px;color:#888;font-weight:600;display:block;margin-bottom:6px}
+.note-editor textarea{width:100%;padding:10px 12px;border:2px solid #e8e0d8;border-radius:10px;font-size:14px;outline:none;resize:vertical;min-height:56px;font-family:inherit;transition:.2s}
+.note-editor textarea:focus{border-color:#d35400}
+.note-editor .note-save{display:block;width:100%;margin-top:8px;padding:8px;border:none;border-radius:8px;background:#d35400;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.note-editor .note-save:active{transform:scale(.97)}
+
 /* back btn */
 .back-bar{display:flex;align-items:center;padding:8px 0 12px;gap:12px}
 .back-btn{width:36px;height:36px;border-radius:50%;border:none;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);font-size:20px;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -23,7 +42,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .back-bar h2{font-size:18px;font-weight:600;color:#444}
 
 /* home menu */
-.home-grid{display:flex;flex-direction:column;gap:16px;padding:10px 0;flex:1;justify-content:center}
+.home-grid{display:flex;flex-direction:column;gap:16px;padding:0;flex:1;justify-content:center}
 .home-card{border-radius:16px;padding:30px 20px;text-align:center;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(0,0,0,.06);position:relative;overflow:hidden}
 .home-card:active{transform:scale(.97)}
 .home-card-delivery{background:linear-gradient(135deg,#ff6b35,#f7931e)}
@@ -72,11 +91,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 
 /* options list */
 .options-list{display:flex;flex-direction:column;gap:10px;flex:1;padding-bottom:20px}
-.option-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:.2s}
-.option-item:active{transform:scale(.98)}
-.option-item .o-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;cursor:pointer;background:#f5f0eb}
-.option-item .o-name{flex:1;font-size:15px;font-weight:500;color:#444}
-.option-item .o-del{width:30px;height:30px;border:none;border-radius:50%;background:#fce4e4;color:#e74c3c;font-size:16px;cursor:pointer;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
+.option-item{display:flex;align-items:center;gap:10px;background:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:.2s}
+.option-item .o-img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;cursor:pointer;background:#f5f0eb}
+.option-item .o-info{flex:1;min-width:0}
+.option-item .o-name{font-size:14px;font-weight:500;color:#444}
+.option-item .o-sub{font-size:11px;color:#aaa;margin-top:1px}
+.option-item .o-pick{padding:6px 12px;border:none;border-radius:8px;background:#d35400;color:#fff;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;transition:.2s}
+.option-item .o-pick:active{transform:scale(.9);background:#e67e22}
+.option-item .o-pick.is-today{background:#27ae60}
+.option-item .o-del{width:28px;height:28px;border:none;border-radius:50%;background:#fce4e4;color:#e74c3c;font-size:14px;cursor:pointer;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
 .option-item .o-del:active{transform:scale(.85);background:#e74c3c;color:#fff}
 .option-empty{text-align:center;color:#bbb;font-size:14px;padding:40px 0}
 
@@ -107,6 +130,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     <h1>🍽️ 今天吃什么</h1>
     <p>选择困难症的终结者</p>
   </div>
+
+  <!-- Today's Choice Bar -->
+  <div class="today-bar" id="today-bar">
+    <div class="tb-label">📋 今天的决定</div>
+    <div id="today-content"></div>
+  </div>
+
+  <!-- Note Editor (inline on home) -->
+  <div class="note-editor" id="note-editor">
+    <label for="note-text">📝 备注</label>
+    <textarea id="note-text" placeholder="自由填写备注信息…今天为什么选这个？"></textarea>
+    <button class="note-save" onclick="saveNote()">保存备注</button>
+  </div>
+
   <div class="home-grid">
     <div class="home-card home-card-delivery" onclick="navigate('delivery')">
       <span class="icon">🛵</span>
@@ -242,10 +279,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 
 <script>
 // ===== STATE =====
-const STORAGE_KEY = 'canteen_options_v2';
+const STORAGE_KEY = 'canteen_options_v3';
+const CHOICE_KEY = 'today_choice_v1';
 const STORES = ['floor2','floor3','dongjiao'];
+const STORE_NAMES = {floor2:'二楼食堂', floor3:'三楼食堂', dongjiao:'东教食堂'};
+const STORE_ICONS = {floor2:'🥟', floor3:'🍜', dongjiao:'📚'};
 let data = loadData();
-let pendingImage = null; // base64 data URL for next add
+let pendingImage = null;
 
 function defaultData() {
   return {
@@ -273,7 +313,6 @@ function loadData() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const d = JSON.parse(raw);
-      // ensure all stores exist
       STORES.forEach(k => { if(!d[k]) d[k]=[]; });
       return d;
     }
@@ -287,11 +326,86 @@ function saveData() {
 
 function genId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
+// ===== TODAY'S CHOICE =====
+function getTodayChoice() {
+  try {
+    const raw = localStorage.getItem(CHOICE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+
+function setTodayChoice(item, store) {
+  const choice = {
+    item: item,
+    store: store,
+    storeName: STORE_NAMES[store],
+    icon: STORE_ICONS[store],
+    note: '',
+    date: new Date().toLocaleDateString('zh-CN'),
+    timestamp: Date.now()
+  };
+  // preserve existing note if there was one
+  const old = getTodayChoice();
+  if (old && old.note) choice.note = old.note;
+  localStorage.setItem(CHOICE_KEY, JSON.stringify(choice));
+  updateTodayBar();
+}
+
+function clearTodayChoice() {
+  localStorage.removeItem(CHOICE_KEY);
+  document.getElementById('note-editor').classList.remove('show');
+  updateTodayBar();
+}
+
+function saveNote() {
+  const choice = getTodayChoice();
+  if (!choice) { showToast('请先选择吃什么'); return; }
+  const note = document.getElementById('note-text').value.trim();
+  choice.note = note;
+  localStorage.setItem(CHOICE_KEY, JSON.stringify(choice));
+  updateTodayBar();
+  showToast('✅ 备注已保存');
+}
+
+function updateTodayBar() {
+  const choice = getTodayChoice();
+  const container = document.getElementById('today-content');
+  const noteEditor = document.getElementById('note-editor');
+
+  if (!choice || !choice.item) {
+    container.innerHTML = '<div class="tb-empty">今天还没选，去看看吧 👇</div>';
+    noteEditor.classList.remove('show');
+    return;
+  }
+
+  const hasImg = choice.item.image && choice.item.image.startsWith('data:');
+  const imgHtml = hasImg
+    ? `<img src="${choice.item.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;vertical-align:middle;margin-right:6px;cursor:pointer" onclick="openImage('${choice.item.image}')">`
+    : '';
+
+  const noteHtml = choice.note
+    ? `<div class="tb-note">💬 ${choice.note}</div>`
+    : '';
+
+  container.innerHTML = `
+    <div class="tb-choice">${imgHtml}${choice.item.name}</div>
+    <div class="tb-source">${choice.icon} ${choice.storeName}</div>
+    ${noteHtml}
+    <button class="tb-clear" onclick="clearTodayChoice()">换一个</button>
+  `;
+
+  // show note editor
+  noteEditor.classList.add('show');
+  document.getElementById('note-text').value = choice.note || '';
+}
+
 // ===== NAVIGATION =====
 function navigate(page) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   if(['floor2','floor3','dongjiao'].includes(page)) renderList(page);
+  if(page === 'home') updateTodayBar();
   window.scrollTo(0,0);
 }
 
@@ -320,21 +434,38 @@ function addOption(store) {
 }
 
 function deleteOption(store, id) {
+  // if deleting today's choice, clear it
+  const choice = getTodayChoice();
+  if (choice && choice.item && choice.item.id === id) {
+    clearTodayChoice();
+  }
   data[store] = data[store].filter(o => o.id !== id);
   saveData();
   renderList(store);
+}
+
+function selectOption(store, id) {
+  const item = data[store].find(o => o.id === id);
+  if (!item) { showToast('选项不存在'); return; }
+  setTodayChoice(item, store);
+  showToast(`✅ 今天吃 ${item.name}`);
+  navigate('home');
 }
 
 function renderList(store) {
   const key = store === 'floor2' ? 'f2' : store === 'floor3' ? 'f3' : 'dj';
   const container = document.getElementById(key+'-list');
   const items = data[store];
+  const today = getTodayChoice();
+  const todayId = today && today.item ? today.item.id : null;
+
   if (items.length === 0) {
     container.innerHTML = '<div class="option-empty">还没有选项，在上面添加吧 📝</div>';
     return;
   }
   container.innerHTML = items.map(item => {
     const hasImg = item.image && item.image.startsWith('data:');
+    const isToday = item.id === todayId;
     return `
       <div class="option-item">
         ${store !== 'floor2' && hasImg
@@ -343,7 +474,11 @@ function renderList(store) {
             ? `<div class="o-img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc">📋</div>`
             : ''
         }
-        <span class="o-name">${item.name}</span>
+        <div class="o-info">
+          <div class="o-name">${item.name}</div>
+          <div class="o-sub">点击「选这个」决定今天吃它</div>
+        </div>
+        <button class="o-pick ${isToday?'is-today':''}" onclick="selectOption('${store}','${item.id}')">${isToday?'✓ 已选':'选这个'}</button>
         <button class="o-del" onclick="deleteOption('${store}','${item.id}')">✕</button>
       </div>
     `;
@@ -354,18 +489,15 @@ function renderList(store) {
 function handleImageUpload(event, store) {
   const file = event.target.files[0];
   if (!file) return;
-  // WeChat compatible: FileReader base64
   const reader = new FileReader();
   reader.onload = function(e) {
     pendingImage = e.target.result;
     updateUploadLabel(store);
     showToast('📷 图片已选择');
-    // auto-focus input
     const key = store === 'floor3' ? 'f3' : 'dj';
     document.getElementById(key+'-input').focus();
   };
   reader.readAsDataURL(file);
-  // reset so same file can be selected again
   event.target.value = '';
 }
 
@@ -416,7 +548,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ===== INIT =====
-// Render any starting page if needed (home is default, no render needed)
+updateTodayBar();
 console.log('🍽️ 今天吃什么 已加载');
 </script>
 </body>
