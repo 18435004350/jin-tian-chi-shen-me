@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title>今天吃什么</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f5f0eb;min-height:100vh;color:#333}
+.page{display:none;flex-direction:column;min-height:100vh;padding:20px 16px 30px}
+.page.active{display:flex}
+
+/* header */
+.header{text-align:center;padding:20px 0 10px}
+.header h1{font-size:26px;font-weight:700;color:#d35400}
+.header p{font-size:14px;color:#999;margin-top:4px}
+
+/* back btn */
+.back-bar{display:flex;align-items:center;padding:8px 0 12px;gap:12px}
+.back-btn{width:36px;height:36px;border-radius:50%;border:none;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);font-size:20px;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.back-btn:active{transform:scale(.92)}
+.back-bar h2{font-size:18px;font-weight:600;color:#444}
+
+/* home menu */
+.home-grid{display:flex;flex-direction:column;gap:16px;padding:10px 0;flex:1;justify-content:center}
+.home-card{border-radius:16px;padding:30px 20px;text-align:center;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(0,0,0,.06);position:relative;overflow:hidden}
+.home-card:active{transform:scale(.97)}
+.home-card-delivery{background:linear-gradient(135deg,#ff6b35,#f7931e)}
+.home-card-canteen{background:linear-gradient(135deg,#2ecc71,#27ae60)}
+.home-card .icon{font-size:48px;display:block;margin-bottom:10px}
+.home-card .label{font-size:22px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.15)}
+.home-card .sub{font-size:13px;color:rgba(255,255,255,.85);margin-top:4px}
+
+/* floor grid */
+.floor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:10px 0}
+.floor-card{border-radius:14px;padding:24px 12px;text-align:center;cursor:pointer;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:.2s}
+.floor-card:active{transform:scale(.95)}
+.floor-card .emoji{font-size:36px;display:block;margin-bottom:6px}
+.floor-card .name{font-size:16px;font-weight:600;color:#555}
+.floor-card .desc{font-size:12px;color:#999;margin-top:2px}
+
+/* delivery page */
+.delivery-grid{display:flex;flex-direction:column;gap:14px;padding:10px 0}
+.delivery-btn{display:flex;align-items:center;gap:14px;background:#fff;border-radius:14px;padding:18px 16px;text-decoration:none;color:#333;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:.2s}
+.delivery-btn:active{transform:scale(.97)}
+.delivery-btn .d-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.delivery-btn .d-info{flex:1}
+.delivery-btn .d-name{font-size:16px;font-weight:600}
+.delivery-btn .d-desc{font-size:12px;color:#999;margin-top:2px}
+.delivery-btn .d-arrow{font-size:18px;color:#ccc}
+.mt-bg{background:#ffd700}
+.tb-bg{background:#ff6b6b;color:#fff}
+.elm-bg{background:#00a0e9;color:#fff}
+
+/* options page */
+.options-toolbar{display:flex;gap:8px;margin:10px 0 14px}
+.options-toolbar input{flex:1;padding:10px 14px;border:2px solid #e8e0d8;border-radius:10px;font-size:15px;outline:none;background:#fff;transition:.2s}
+.options-toolbar input:focus{border-color:#d35400}
+.options-toolbar .add-btn{width:44px;height:44px;border:none;border-radius:10px;background:#d35400;color:#fff;font-size:22px;cursor:pointer;flex-shrink:0;transition:.2s}
+.options-toolbar .add-btn:active{transform:scale(.92)}
+
+/* image upload area (for 3F & 东教) */
+.img-upload-area{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.img-upload-area input[type=file]{display:none}
+.img-upload-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border:2px dashed #ccc;border-radius:10px;background:#fff;font-size:14px;color:#888;cursor:pointer;transition:.2s}
+.img-upload-btn:active{background:#f5f0eb}
+.img-upload-btn .cam-icon{font-size:18px}
+.add-with-img-area{display:flex;gap:8px;flex:1;min-width:0}
+.add-with-img-area input{flex:1;padding:10px 14px;border:2px solid #e8e0d8;border-radius:10px;font-size:15px;outline:none;background:#fff;transition:.2s;min-width:0}
+.add-with-img-area input:focus{border-color:#d35400}
+
+/* options list */
+.options-list{display:flex;flex-direction:column;gap:10px;flex:1;padding-bottom:20px}
+.option-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:.2s}
+.option-item:active{transform:scale(.98)}
+.option-item .o-img{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;cursor:pointer;background:#f5f0eb}
+.option-item .o-name{flex:1;font-size:15px;font-weight:500;color:#444}
+.option-item .o-del{width:30px;height:30px;border:none;border-radius:50%;background:#fce4e4;color:#e74c3c;font-size:16px;cursor:pointer;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
+.option-item .o-del:active{transform:scale(.85);background:#e74c3c;color:#fff}
+.option-empty{text-align:center;color:#bbb;font-size:14px;padding:40px 0}
+
+/* image preview modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-img{max-width:90vw;max-height:80vh;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.modal-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* preset toggle */
+.preset-toggle{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.preset-toggle button{padding:6px 14px;border:1.5px solid #ddd;border-radius:20px;background:#fff;font-size:13px;color:#666;cursor:pointer;transition:.2s}
+.preset-toggle button:active,.preset-toggle button.on{background:#d35400;color:#fff;border-color:#d35400}
+
+/* empty state */
+.empty-state{padding:40px 0;text-align:center;color:#bbb;font-size:14px;line-height:1.8}
+
+/* notifications */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:2000;pointer-events:none;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ========== MAIN MENU ========== -->
+<div id="page-home" class="page active">
+  <div class="header">
+    <h1>🍽️ 今天吃什么</h1>
+    <p>选择困难症的终结者</p>
+  </div>
+  <div class="home-grid">
+    <div class="home-card home-card-delivery" onclick="navigate('delivery')">
+      <span class="icon">🛵</span>
+      <div class="label">点外卖</div>
+      <div class="sub">美团 · 淘宝 · 饿了么</div>
+    </div>
+    <div class="home-card home-card-canteen" onclick="navigate('canteen')">
+      <span class="icon">🏫</span>
+      <div class="label">吃食堂</div>
+      <div class="sub">二楼 · 三楼 · 东教</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== DELIVERY ========== -->
+<div id="page-delivery" class="page">
+  <div class="back-bar">
+    <button class="back-btn" onclick="navigate('home')">‹</button>
+    <h2>🛵 点外卖</h2>
+  </div>
+  <div class="delivery-grid">
+    <a class="delivery-btn" href="https://waimai.meituan.com" target="_blank" rel="noopener">
+      <div class="d-icon mt-bg">🥡</div>
+      <div class="d-info">
+        <div class="d-name">美团外卖</div>
+        <div class="d-desc">美食 · 水果 · 药品 · 跑腿</div>
+      </div>
+      <span class="d-arrow">›</span>
+    </a>
+    <a class="delivery-btn" href="https://www.taobao.com" target="_blank" rel="noopener">
+      <div class="d-icon tb-bg">🛒</div>
+      <div class="d-info">
+        <div class="d-name">淘宝</div>
+        <div class="d-desc">淘宝吃货 · 本地生活</div>
+      </div>
+      <span class="d-arrow">›</span>
+    </a>
+    <a class="delivery-btn" href="https://ele.me" target="_blank" rel="noopener">
+      <div class="d-icon elm-bg">🦉</div>
+      <div class="d-info">
+        <div class="d-name">饿了么</div>
+        <div class="d-desc">外卖 · 生鲜 · 商超</div>
+      </div>
+      <span class="d-arrow">›</span>
+    </a>
+  </div>
+</div>
+
+<!-- ========== CANTEEN FLOORS ========== -->
+<div id="page-canteen" class="page">
+  <div class="back-bar">
+    <button class="back-btn" onclick="navigate('home')">‹</button>
+    <h2>🏫 吃食堂</h2>
+  </div>
+  <div class="floor-grid">
+    <div class="floor-card" onclick="navigate('floor2')">
+      <span class="emoji">🥟</span>
+      <div class="name">二楼食堂</div>
+      <div class="desc">自由添加选项</div>
+    </div>
+    <div class="floor-card" onclick="navigate('floor3')">
+      <span class="emoji">🍜</span>
+      <div class="name">三楼食堂</div>
+      <div class="desc">支持上传点餐码</div>
+    </div>
+    <div class="floor-card" onclick="navigate('dongjiao')" style="grid-column:1/3">
+      <span class="emoji">📚</span>
+      <div class="name">东教食堂</div>
+      <div class="desc">支持上传点餐码</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FLOOR 2 ========== -->
+<div id="page-floor2" class="page">
+  <div class="back-bar">
+    <button class="back-btn" onclick="navigate('canteen')">‹</button>
+    <h2>🥟 二楼食堂</h2>
+  </div>
+  <div class="options-toolbar">
+    <input id="f2-input" type="text" placeholder="输入菜品名称..." maxlength="30">
+    <button class="add-btn" onclick="addOption('floor2')">+</button>
+  </div>
+  <div id="f2-list" class="options-list"></div>
+</div>
+
+<!-- ========== FLOOR 3 ========== -->
+<div id="page-floor3" class="page">
+  <div class="back-bar">
+    <button class="back-btn" onclick="navigate('canteen')">‹</button>
+    <h2>🍜 三楼食堂</h2>
+  </div>
+  <!-- upload + add -->
+  <div class="add-with-img-area">
+    <input id="f3-input" type="text" placeholder="菜品名称..." maxlength="30">
+    <label class="img-upload-btn" id="f3-upload-label">
+      <span class="cam-icon">📷</span>
+      <span>传图</span>
+      <input type="file" accept="image/*" capture="environment" onchange="handleImageUpload(event,'floor3')">
+    </label>
+    <button class="add-btn" onclick="addOption('floor3')">+</button>
+  </div>
+  <div id="f3-list" class="options-list"></div>
+</div>
+
+<!-- ========== DONGJIAO ========== -->
+<div id="page-dongjiao" class="page">
+  <div class="back-bar">
+    <button class="back-btn" onclick="navigate('canteen')">‹</button>
+    <h2>📚 东教食堂</h2>
+  </div>
+  <!-- upload + add -->
+  <div class="add-with-img-area">
+    <input id="dj-input" type="text" placeholder="菜品名称..." maxlength="30">
+    <label class="img-upload-btn" id="dj-upload-label">
+      <span class="cam-icon">📷</span>
+      <span>传图</span>
+      <input type="file" accept="image/*" capture="environment" onchange="handleImageUpload(event,'dongjiao')">
+    </label>
+    <button class="add-btn" onclick="addOption('dongjiao')">+</button>
+  </div>
+  <div id="dj-list" class="options-list"></div>
+</div>
+
+<!-- ========== IMAGE MODAL ========== -->
+<div class="modal-overlay" id="img-modal" onclick="closeModal()">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <img class="modal-img" id="modal-img" src="" alt="点餐码">
+</div>
+
+<!-- ========== TOAST ========== -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+const STORAGE_KEY = 'canteen_options_v2';
+const STORES = ['floor2','floor3','dongjiao'];
+let data = loadData();
+let pendingImage = null; // base64 data URL for next add
+
+function defaultData() {
+  return {
+    floor2: [
+      {id: genId(), name:'番茄鸡蛋面'},
+      {id: genId(), name:'红烧牛肉饭'},
+      {id: genId(), name:'麻辣香锅'},
+      {id: genId(), name:'黄焖鸡米饭'},
+    ],
+    floor3: [
+      {id: genId(), name:'螺蛳粉', image:''},
+      {id: genId(), name:'麻辣烫', image:''},
+      {id: genId(), name:'煲仔饭', image:''},
+    ],
+    dongjiao: [
+      {id: genId(), name:'烤盘饭', image:''},
+      {id: genId(), name:'石锅拌饭', image:''},
+      {id: genId(), name:'鸡公煲', image:''},
+    ]
+  };
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      // ensure all stores exist
+      STORES.forEach(k => { if(!d[k]) d[k]=[]; });
+      return d;
+    }
+  } catch(e) {}
+  return defaultData();
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function genId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+// ===== NAVIGATION =====
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  if(['floor2','floor3','dongjiao'].includes(page)) renderList(page);
+  window.scrollTo(0,0);
+}
+
+// ===== OPTIONS CRUD =====
+function addOption(store) {
+  const key = store === 'floor2' ? 'f2' : store === 'floor3' ? 'f3' : 'dj';
+  const input = document.getElementById(key+'-input');
+  const name = input.value.trim();
+  if (!name) { showToast('请输入菜品名称'); return; }
+  if (data[store].some(o => o.name === name)) { showToast('该菜品已存在'); return; }
+
+  const item = {id: genId(), name};
+  if (store !== 'floor2') {
+    item.image = pendingImage || '';
+  }
+  data[store].push(item);
+  saveData();
+  renderList(store);
+  input.value = '';
+  if (store !== 'floor2') {
+    pendingImage = null;
+    updateUploadLabel(store);
+  }
+  showToast('✅ 已添加');
+  input.focus();
+}
+
+function deleteOption(store, id) {
+  data[store] = data[store].filter(o => o.id !== id);
+  saveData();
+  renderList(store);
+}
+
+function renderList(store) {
+  const key = store === 'floor2' ? 'f2' : store === 'floor3' ? 'f3' : 'dj';
+  const container = document.getElementById(key+'-list');
+  const items = data[store];
+  if (items.length === 0) {
+    container.innerHTML = '<div class="option-empty">还没有选项，在上面添加吧 📝</div>';
+    return;
+  }
+  container.innerHTML = items.map(item => {
+    const hasImg = item.image && item.image.startsWith('data:');
+    return `
+      <div class="option-item">
+        ${store !== 'floor2' && hasImg
+          ? `<img class="o-img" src="${item.image}" alt="${item.name}" onclick="openImage('${item.image}')">`
+          : store !== 'floor2'
+            ? `<div class="o-img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc">📋</div>`
+            : ''
+        }
+        <span class="o-name">${item.name}</span>
+        <button class="o-del" onclick="deleteOption('${store}','${item.id}')">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== IMAGE HANDLING =====
+function handleImageUpload(event, store) {
+  const file = event.target.files[0];
+  if (!file) return;
+  // WeChat compatible: FileReader base64
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    pendingImage = e.target.result;
+    updateUploadLabel(store);
+    showToast('📷 图片已选择');
+    // auto-focus input
+    const key = store === 'floor3' ? 'f3' : 'dj';
+    document.getElementById(key+'-input').focus();
+  };
+  reader.readAsDataURL(file);
+  // reset so same file can be selected again
+  event.target.value = '';
+}
+
+function updateUploadLabel(store) {
+  const key = store === 'floor3' ? 'f3' : 'dj';
+  const label = document.getElementById(key+'-upload-label');
+  if (pendingImage) {
+    label.innerHTML = '<span class="cam-icon">✅</span><span>已选图</span>';
+    label.style.borderColor = '#d35400';
+    label.style.color = '#d35400';
+  } else {
+    label.innerHTML = '<span class="cam-icon">📷</span><span>传图</span>';
+    label.style.borderColor = '#ccc';
+    label.style.color = '#888';
+  }
+}
+
+function openImage(src) {
+  document.getElementById('modal-img').src = src;
+  document.getElementById('img-modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('img-modal').classList.remove('show');
+}
+
+// ===== TOAST =====
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1500);
+}
+
+// ===== KEYBOARD SUPPORT =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const activePage = document.querySelector('.page.active');
+    if (!activePage) return;
+    const id = activePage.id;
+    if (id === 'page-floor2') addOption('floor2');
+    else if (id === 'page-floor3') addOption('floor3');
+    else if (id === 'page-dongjiao') addOption('dongjiao');
+  }
+  if (e.key === 'Escape') closeModal();
+});
+
+// ===== INIT =====
+// Render any starting page if needed (home is default, no render needed)
+console.log('🍽️ 今天吃什么 已加载');
+</script>
+</body>
+</html>
