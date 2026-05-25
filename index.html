@@ -110,6 +110,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .option-item .o-del:active{transform:scale(.85);background:#e74c3c;color:#fff}
 .option-empty{text-align:center;color:#bbb;font-size:14px;padding:40px 0}
 
+/* link input for QR code */
+.link-input-row{display:flex;gap:8px;margin:0 0 10px}
+.link-input-row input{flex:1;padding:8px 12px;border:2px solid #e8e0d8;border-radius:10px;font-size:13px;outline:none;background:#fff;transition:.2s;}
+.link-input-row input:focus{border-color:#d35400}
+.link-input-row .link-icon{display:flex;align-items:center;padding:0 8px;font-size:16px;color:#aaa}
+
+/* QR badge on images */
+.qr-badge{position:relative;display:inline-block}
+.qr-badge::after{content:'🔗 点餐';position:absolute;bottom:2px;right:2px;font-size:9px;background:rgba(0,0,0,.6);color:#fff;padding:1px 5px;border-radius:4px;white-space:nowrap}
+
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;justify-content:center;align-items:center;padding:20px}
 .modal-overlay.show{display:flex}
 .modal-img{max-width:90vw;max-height:80vh;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
@@ -217,6 +227,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
     </label>
     <button class="add-btn" onclick="addOption('floor3')">+</button>
   </div>
+  <div class="link-input-row">
+    <span class="link-icon">🔗</span>
+    <input id="f3-link" type="url" placeholder="点餐链接（可选，点击二维码跳转）" oninput="pendingLink=this.value">
+  </div>
   <div id="f3-list" class="options-list"></div>
 </div>
 
@@ -233,6 +247,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
       <input type="file" accept="image/*" capture="environment" onchange="handleImageUpload(event,'dongjiao')">
     </label>
     <button class="add-btn" onclick="addOption('dongjiao')">+</button>
+  </div>
+  <div class="link-input-row">
+    <span class="link-icon">🔗</span>
+    <input id="dj-link" type="url" placeholder="点餐链接（可选，点击二维码跳转）" oninput="pendingLink=this.value">
   </div>
   <div id="dj-list" class="options-list"></div>
 </div>
@@ -254,6 +272,7 @@ const STORE_NAMES = {floor2:'二楼食堂', floor3:'三楼食堂', dongjiao:'东
 const STORE_ICONS = {floor2:'🥟', floor3:'🍜', dongjiao:'📚'};
 let data = loadData();
 let pendingImage = null;
+let pendingLink = '';
 
 // ===== 选择数据 (localStorage 持久化保存，刷新不丢失) =====
 function getSelections() {
@@ -274,6 +293,7 @@ function addSelection(item, store) {
     id: genId(),
     name: item.name,
     image: item.image || '',
+    link: item.link || '',
     store: store,
     storeName: STORE_NAMES[store],
     icon: STORE_ICONS[store],
@@ -350,8 +370,10 @@ function renderSelections() {
 
   container.innerHTML = selections.map(s => {
     const hasImg = s.image && s.image.startsWith('data:');
+    const hasLink = s.link && s.link.startsWith('http');
+    const imgClick = hasLink ? `openLink('${s.link}')` : `openImage('${s.image}')`;
     const imgHtml = hasImg
-      ? `<img class="sel-img" src="${s.image}" alt="${s.name}" onclick="openImage('${s.image}')">`
+      ? `<div class="qr-badge"><img class="sel-img" src="${s.image}" alt="${s.name}" onclick="${imgClick}"></div>`
       : s.store !== 'floor2'
         ? `<div class="sel-img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc;background:#f5f0eb">📋</div>`
         : '';
@@ -394,14 +416,14 @@ function defaultData() {
       {id: genId(), name:'黄焖鸡米饭'},
     ],
     floor3: [
-      {id: genId(), name:'螺蛳粉', image:''},
-      {id: genId(), name:'麻辣烫', image:''},
-      {id: genId(), name:'煲仔饭', image:''},
+      {id: genId(), name:'螺蛳粉', image:'', link:''},
+      {id: genId(), name:'麻辣烫', image:'', link:''},
+      {id: genId(), name:'煲仔饭', image:'', link:''},
     ],
     dongjiao: [
-      {id: genId(), name:'烤盘饭', image:''},
-      {id: genId(), name:'石锅拌饭', image:''},
-      {id: genId(), name:'鸡公煲', image:''},
+      {id: genId(), name:'烤盘饭', image:'', link:''},
+      {id: genId(), name:'石锅拌饭', image:'', link:''},
+      {id: genId(), name:'鸡公煲', image:'', link:''},
     ]
   };
 }
@@ -442,13 +464,19 @@ function addOption(store) {
   if (data[store].some(o => o.name === name)) { showToast('该菜品已存在'); return; }
 
   const item = {id: genId(), name};
-  if (store !== 'floor2') item.image = pendingImage || '';
+  if (store !== 'floor2') {
+    const linkKey = store === 'floor3' ? 'f3' : 'dj';
+    item.image = pendingImage || '';
+    item.link = pendingLink || '';
+    document.getElementById(linkKey+'-link').value = '';
+  }
   data[store].push(item);
   saveData();
   renderList(store);
   input.value = '';
   if (store !== 'floor2') {
     pendingImage = null;
+    pendingLink = '';
     updateUploadLabel(store);
   }
   showToast('✅ 已添加');
@@ -478,17 +506,19 @@ function renderList(store) {
   }
   container.innerHTML = items.map(item => {
     const hasImg = item.image && item.image.startsWith('data:');
+    const hasLink = item.link && item.link.startsWith('http');
+    const imgClick = hasLink ? `openLink('${item.link}')` : `openImage('${item.image}')`;
     return `
       <div class="option-item">
         ${store !== 'floor2' && hasImg
-          ? `<img class="o-img" src="${item.image}" alt="${item.name}" onclick="openImage('${item.image}')">`
+          ? `<div class="qr-badge"><img class="o-img" src="${item.image}" alt="${item.name}" onclick="${imgClick}"></div>`
           : store !== 'floor2'
             ? `<div class="o-img" style="display:flex;align-items:center;justify-content:center;font-size:18px;color:#ccc">📋</div>`
             : ''
         }
         <div class="o-info">
           <div class="o-name">${item.name}</div>
-          <div class="o-sub">点击「选它」添加到今日决定</div>
+          <div class="o-sub">点击「选它」添加到今日决定${hasLink ? ' | 图片可跳转点餐' : ''}</div>
         </div>
         <button class="o-pick" onclick="pickOption('${store}','${item.id}')">选它</button>
         <button class="o-del" onclick="deleteOption('${store}','${item.id}')">✕</button>
@@ -530,6 +560,10 @@ function updateUploadLabel(store) {
 function openImage(src) {
   document.getElementById('modal-img').src = src;
   document.getElementById('img-modal').classList.add('show');
+}
+
+function openLink(url) {
+  window.open(url, '_blank');
 }
 
 function closeModal() {
